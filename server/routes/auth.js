@@ -11,48 +11,52 @@ dotenv.config();
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
-    const {email, password} = req.body;
-
-    //To check anything is missed
-
-    if(!email || !password)
-        return res.status(400).json({error: "Please enter the all required fields!"});
-
-    //Email validation
-
-    const emailReg =  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if(!emailReg.test(email))
-        return res.status(400).json({error: "Please enter valid email address"});
-
-    try {
-
-        const doesUserExist = await User.findOne({email});
-
-        if(!doesUserExist) 
-
-        return res.status(400).json({error: "Invalid user or password"});
-
-        //If user is present
-
-        const doesPasswordMatch = await bcrypt.compare(password, doesUserExist.password);
-
-        if(!doesPasswordMatch)
-
-        return res.status(400).json({error: "Invalid user or password"});
-        
-        const payload = {_id: doesUserExist._id};
-        const token =  jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "1h",});
-
-        return res.status(200).json({token});
-        
-    } catch (error) {
-
-        console.log(error);
-        return res.status(500).json({error: error.message});
-        
+    const { email, password } = req.body;
+  
+    // Check if required fields are provided
+    if (!email || !password) {
+      return res.status(400).json({ error: "Please enter all required fields!" });
     }
-
-});
+  
+    // Validate the email format using a regular expression
+    const emailReg = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (!emailReg.test(email)) {
+      return res.status(400).json({ error: "Please enter a valid email address" });
+    }
+  
+    try {
+      // Check if the user exists in the database
+      const doesUserExist = await User.findOne({ email });
+  
+      if (!doesUserExist) {
+        // If the user is not found, return an error
+        return res.status(400).json({ error: "Invalid user or password" });
+      }
+  
+      // Compare the provided password with the stored hashed password
+      const doesPasswordMatch = await bcrypt.compare(password, doesUserExist.password);
+  
+      if (!doesPasswordMatch) {
+        // If the password does not match, return an error
+        return res.status(400).json({ error: "Invalid user or password" });
+      }
+  
+      // Create a payload with user ID to be included in the JWT token
+      const payload = { _id: doesUserExist._id };
+  
+      // Generate the JWT token with the secret and expiration time
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+  
+      // Return the token in the response
+      return res.status(200).json({ token });
+  
+    } catch (error) {
+      console.error(error);
+      // Return a server error if something went wrong
+      return res.status(500).json({ error: "Server error, please try again later" });
+    }
+  });
+  
 
 router.post("/register", async (req, res) => {
       
