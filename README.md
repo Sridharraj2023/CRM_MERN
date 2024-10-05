@@ -28,5 +28,59 @@ Make sure you have the following installed on your machine:
 
 ### Clone the Repository
 ```bash
+
+Install Dependencies
+Backend
+Navigate to the server folder and install dependencies:
+
+bash
+Copy code
+cd server
+npm install
+Frontend
+Navigate to the client folder and install dependencies:
+
+bash
+Copy code
+cd ../client
+npm install
+Setup Environment Variables
+Create a .env file in the server directory and add the following environment variables:
+
+plaintext
+Copy code
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+Running the Application
+Start the Backend Server
+From the server directory, run:
+
+bash
+Copy code
+npm run dev
+Start the Frontend
+Open a new terminal, navigate to the client directory, and run:
+
+bash
+Copy code
+npm start
+The application should now be running on http://localhost:3000 (frontend) and http://localhost:5000 (backend).
+
+Usage
+Navigate to the application in your browser.
+Register a new user or log in if you already have an account.
+Use the dashboard to manage customer profiles.
+Contributing
+Contributions are welcome! Please follow these steps to contribute:
+
+Fork the repository.
+Create a new branch (git checkout -b feature/YourFeature).
+Make your changes and commit them (git commit -m 'Add some feature').
+Push to the branch (git push origin feature/YourFeature).
+Open a pull request.
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+
 git clone https://github.com/Sridharraj2023/CRM_MERN.git
 cd CRM_MERN
